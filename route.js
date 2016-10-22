@@ -16,13 +16,13 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
   // Home page
   .state('home', {
     url: '/',
-    templateUrl: '/home.template.html'
+    templateUrl: 'http://codepen.io/orux/pen/jrXgZQ'
   })
 
   // Premade list page
   .state('mainList', {
     url: '/main-list',
-    templateUrl: 'http://codepen.io/orux/pen/jrXgZQ.html',
+    templateUrl: '/index.html',
     controller: 'MainShoppingListController as mainList',
     resolve: {
       items: ['ShoppingListService', function (ShoppingListService) {
