@@ -16,7 +16,7 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
   // Home page
   .state('home', {
     url: '/',
-    templateUrl: 'http://codepen.io/orux/pen/jrXgZQ'
+    template: '<h1>Hello this is restourant home</h1>'
   })
 
   // Premade list page
