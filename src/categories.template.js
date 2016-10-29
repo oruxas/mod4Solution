@@ -1,6 +1,0 @@
-
-<a ui-sref="home">Home</a> &lt; <span>Categories</span>
-
-<h3>Menu Categories</h3>
-<cat-list items="categoriesCtrl.items"></cat-list>
-

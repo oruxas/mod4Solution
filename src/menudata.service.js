@@ -1,41 +1,63 @@
 (function () {
 'use strict';
 
-angular.module('Data')
-.service('MenuDataService',MenuDataServiceController);
+angular.module('data')
+.service('MenuDataService', MenuDataService);
 
-MenuDataServiceController.$inject = ['$http'];
-function MenuDataServiceController($http) {
-	var service = this;
-    console.log("Hey0");
-        
-    service.getAllCategories = function () {
-        console.log("Hey1");
-        var promise = $http({
-            method: "GET",
-            url: ("https://davids-restaurant.herokuapp.com/categories.json")
-        });
+MenuDataService.$inject = ['$http', '$q'];
+function MenuDataService($http, $q) {
+  var service = this;
 
-        return promise.then(function(result) {
-            return result.data;
-        });
-    };
-        
-    service.getItemsForCategory = function(categoryShortName) {
-        console.log("Hey3");
-        var promise = $http({
-            url: 'https://davids-restaurant.herokuapp.com/menu_items.json?category=' + categoryShortName, 
-            params: {
-                category: categoryShortName
-            }
-        });
+  //return a promise with all categories
+  service.getAllCategories = function () {
+    console.log("service with all categories running");
+    var deferred = $q.defer();
 
-        return promise.then(function(result) {
-            console.log("Hey4");
-            console.log(result.data);
-            return result.data;
-        });
-	};
+    $http({
+      method: 'GET',
+      url: 'https://davids-restaurant.herokuapp.com/categories.json'
+    })
+    .then( function (result) {
+      deferred.resolve(result.data);
+    });
+
+    return deferred.promise;
+  };
+
+  //return a promise with all items in a categories
+  service.getItemsForCategory = function (categoryShortName) {
+    console.log("service for category items running");
+    var deferred = $q.defer();
+    //if categoryShortName is not defined
+    if (categoryShortName == "") {
+      console.log("no choice, search a random choice");
+      var choices = [];
+
+      choices = ['L','A','B','SP','C','F','V','DK','VG','CU','NL','PF','FR','CM','FY','SO','DS','D','SR'];
+
+      categoryShortName = choices[Math.floor(Math.random()*choices.length)];
+    }
+
+    console.log("the choice is : " + categoryShortName);
+
+    //the https returned
+    $http({
+      method: 'GET',
+      url: 'https://davids-restaurant.herokuapp.com/menu_items.json',
+      params: {
+        category: categoryShortName
+      }
+    })
+    .then( function (result) {
+      deferred.resolve(result.data.menu_items);
+      console.log("And the result is :");
+      console.log(result.data);
+    });
+
+    console.log(deferred.promise);
+    return deferred.promise;
+  };
+
 }
 
 })();

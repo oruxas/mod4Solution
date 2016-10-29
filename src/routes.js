@@ -7,39 +7,43 @@ angular.module('MenuApp')
 RoutesConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 function RoutesConfig($stateProvider, $urlRouterProvider) {
 
-  // Redirect to home page if no other URL matches
+  //first, we want that evrything go to the home if no good url
   $urlRouterProvider.otherwise('/');
 
+  // *** Set up UI states ***
   $stateProvider
 
-  // Home page
+  //routes
   .state('home', {
     url: '/',
-    templateUrl: 'src/home.template.html'
+    templateUrl: 'templates/home.html'
   })
 
-  .state('categories', {
-    url: '/categories',
-    templateUrl: 'src/categories.template.html',
-    controller: 'CategoriesComponentController as categoriesCtrl',
+  //categories page
+  .state('category',{
+    url: '/category',
+    templateUrl: 'templates/category.html',
+    controller: 'CategoryCtrl as catList',
     resolve: {
-      items: ['MenuDataService', function (MenuDataService) {
+      menuCategory: ['MenuDataService', function (MenuDataService){
         return MenuDataService.getAllCategories();
       }]
     }
   })
 
-  .state('items', {
-    url: '/items/{categoryId}',
-    templateUrl: 'src/items.template.html',
-    controller: 'ItemsController as itemsCtrl',
+  //items pages
+  .state('items',{
+    url: '/items/{itemsCategory}',
+    templateUrl: 'templates/items.html',
+    controller: 'ItemsCtrl as cat',
     resolve: {
-      items: ['$stateParams','MenuDataService', function ($stateParams,MenuDataService) {
-        return MenuDataService.getItemsForCategory($stateParams.categoryId);
-      }]
+      items: ['$stateParams', 'MenuDataService',
+              function ($stateParams, MenuDataService) {
+                return MenuDataService.getItemsForCategory($stateParams.itemsCategory);
+              }]
     }
   });
 
-};
+}
 
 })();
